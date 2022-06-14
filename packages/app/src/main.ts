@@ -4,6 +4,9 @@ import router from './router'
 
 import { IonicVue } from '@ionic/vue'
 
+import { createPinia } from 'pinia'
+import { createPersistedStatePlugin } from 'pinia-plugin-persistedstate-2'
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css'
 
@@ -23,7 +26,19 @@ import '@ionic/vue/css/display.css'
 /* Theme variables */
 import './theme/variables.css'
 
-const app = createApp(App).use(IonicVue).use(router)
+import 'vue3-treeview/dist/style.css'
+// @ts-ignore
+import Tree from 'vue3-treeview'
+
+const pinia = createPinia()
+const installPersistedStatePlugin = createPersistedStatePlugin()
+pinia.use((context) => installPersistedStatePlugin(context))
+
+const app = createApp(App)
+  .use(IonicVue, {})
+  .use(router)
+  .use(pinia)
+  .component('Tree', Tree)
 
 router.isReady().then(() => {
   app.mount('#app')
